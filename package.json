@@ -1,0 +1,31 @@
+{
+  "name": "sinorailway-mobile-vue3",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@vuemap/vue-amap": "^1.1.15",
+    "axios": "^0.27.2",
+    "css-loader": "^6.7.1",
+    "js-md5": "^0.7.3",
+    "normalize.css": "^8.0.1",
+    "style-loader": "^3.3.1",
+    "vant": "^3.6.3",
+    "vue": "^3.2.38",
+    "vue-router": "^4.1.5"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^3.0.3",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.22.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "prettier": "^2.7.1",
+    "unplugin-vue-components": "^0.22.7",
+    "vite": "^3.0.9"
+  }
+}
