@@ -18,9 +18,11 @@
                     {{item.name}}
                 </div>
                 <van-space direction="vertical" style="padding: 10px;display: flex;flex-direction: column;">
-                    <van-button round @click="fenceDetail(item)" color="#7232dd" type="primary" size="small">查看详情
+                    <van-button style="border-radius: 5px;" @click="fenceDetail(item.id)" color="#7232dd" type="primary" size="mini">查看详情
                     </van-button>
-                    <van-button round @click="updateFence(item)" color="#7232dd" type="primary" size="small">更新围栏
+                    <van-button style="border-radius: 5px;" @click="fenceDetail(item.id)" color="#7232dd" type="primary" size="mini">分配围栏
+                    </van-button>
+                    <van-button style="border-radius: 5px;" @click="updateFence(item)" color="#7232dd" type="primary" size="mini">更新围栏
                     </van-button>
                 </van-space>
             </div>
@@ -58,12 +60,12 @@ const getFenceList = () => {
     })
 };
 
-const fenceDetail = (item) => {
-    console.log(item)
+const fenceDetail = (id) => {
+    console.log(id)
     router.push({
         path: '/fence/detail',
         query: {
-            data: item
+            id: id
         }
     })
 };
@@ -75,7 +77,7 @@ onMounted(() => {
 
 <style>
 .fence-item {
-    height: 90px;
+    min-height: 90px;
     display: flex;
     margin-bottom: 5px;
     background: rgb(190, 235, 199);

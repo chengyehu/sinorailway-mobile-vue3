@@ -31,11 +31,12 @@ import { onMounted, reactive, ref } from 'vue';
 import { Toast } from 'vant';
 import { Dialog } from 'vant';
 import { useRouter } from 'vue-router';
-import { getUnitsListApi } from '../../service/units'
+import { getUnitsListApi } from '../../service/units';
 import { createDeviceApi } from '../../service/device';
 
 const router = useRouter();
 const pageTitle = ref('添加设备');
+
 const onClickLeft = () => history.back();
 const onClickRight = () => {
     Dialog.confirm({
@@ -74,7 +75,7 @@ const getUnitList = () => {
 };
 
 const createDevice = () => {
-    let params = {imei: imei.value, name: name.value, orgId: unitId.value};
+    let params = { imei: imei.value, name: name.value, orgId: unitId.value };
     createDeviceApi(params).then((res) => {
         console.log(res)
     }).catch((error) => {
@@ -83,6 +84,14 @@ const createDevice = () => {
 };
 
 onMounted(() => {
+    const url = window.location.href;
+    let action = url.split("action=")[1];
+    if (action === 'add') {
+        pageTitle.value = '添加设备';
+    }
+    if (action === 'update') {
+        pageTitle.value = '更新设备';
+    }
     getUnitList()
 })
 

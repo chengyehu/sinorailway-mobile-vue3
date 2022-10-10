@@ -19,9 +19,12 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
-
+import { Dialog } from 'vant';
+import { deleteFenceApi } from '../../service/fence';
+// 变量定义区
 const zoom = ref(15);
-const center = reactive([121.5273285, 31.21515044])
+const center = reactive([121.5273285, 31.21515044]);
+const fenceId = ref('');
 
 const polygon = reactive({
     draggable: false,
@@ -42,7 +45,32 @@ function click(e) {
 }
 
 const onClickLeft = () => history.back();
+// 标题栏右侧点击事件，确定删除围栏
+const onClickRight = () => {
+    Dialog.confirm({
+        title: '提醒',
+        message: '确定要删除该围栏吗？',
+    }).then(() => {
+        deleteFence(fenceId.value)
+    }).catch(() => {
 
-const onClickRight = () => console.log('按钮');
+    });
+};
+// 删除围栏
+const deleteFence = (id) => {
+    console.log(id)
+    let params = {}
+    deleteFenceApi(params).then((res)=> {
+
+    }).catch((error)=> {
+
+    })
+};
+
+onMounted(()=> {
+    const url = window.location.href;
+    console.log(url.split("=")[1])
+    fenceId.value = url.split("=")[1];
+});
 
 </script>

@@ -6,6 +6,7 @@ import md5 from 'js-md5';
 import VueAMap, {initAMapApiLoader} from '@vuemap/vue-amap';
 import '@vuemap/vue-amap/dist/style.css';
 import 'vant/lib/index.css';
+import 'vant/es/toast/style';
 
 initAMapApiLoader({
     key: "41e566f0f2cb735c8d485a14e02d7ba8"

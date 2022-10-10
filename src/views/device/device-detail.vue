@@ -35,43 +35,64 @@
             </div>
             <div class="sub-device-list">
                 <div style="color: white;font-weight: bold;margin: 10px 0;">从设备列表</div>
-                <div v-for="(item, index) in subDeviceList.data" class="sub-device-item"
-                    style="display: flex;padding: 15px;align-items: center;">
-                    <div style="flex: 1;">
-                        <div>{{item.name}}</div>
-                        <div>电量：{{item.bat}}</div>
-                        <div>电流：{{item.cur}}A</div>
-                        <div>SW1：{{item.sw1}}</div>
-                        <div>SW2：{{item.sw2}}</div>
-                        <div>SW3：{{item.sw3}}</div>
-                        <div>阈值：{{item.curLimit}}A</div>
-                    </div>
-                    <div style="display: flex;flex-direction: column;">
-                        <van-button @click="setLimitValue(item.curLimit)" color="#7232dd" type="primary" size="small"
-                            style="margin-bottom: 10px;">设置阈值
-                        </van-button>
-                        <van-button @click="renameDevice(item.name)" color="#7232dd" type="primary" size="small"
-                            style="margin-bottom: 10px;">设备改名
-                        </van-button>
-                        <van-button color="#7232dd" type="primary" size="small" style="margin-bottom: 10px;">数据趋势
-                        </van-button>
+                <div style="text-align: center;" v-if="subDeviceList.data.length === 0">
+                    <van-empty image-size="6rem" description="暂无从设备" />
+
+                </div>
+                <div v-else>
+
+                    <div v-for="(item, index) in subDeviceList.data" class="sub-device-item"
+                        style="display: flex;padding: 15px;align-items: center;">
+                        <div style="flex: 1;">
+                            <div>{{item.name}}</div>
+                            <div>电量：{{item.bat}}</div>
+                            <div>电流：{{item.cur}}A</div>
+                            <div>SW1：{{item.sw1}}</div>
+                            <div>SW2：{{item.sw2}}</div>
+                            <div>SW3：{{item.sw3}}</div>
+                            <div>阈值：{{item.curLimit}}A</div>
+                        </div>
+                        <div style="display: flex;flex-direction: column;">
+                            <van-button @click="setLimitValue(item)" color="#7232dd" type="primary"
+                                size="small" style="margin-bottom: 10px;">设置阈值
+                            </van-button>
+                            <van-button @click="renameDevice(item.name)" color="#7232dd" type="primary" size="small"
+                                style="margin-bottom: 10px;">设备改名
+                            </van-button>
+                            <van-button color="#7232dd" type="primary" size="small" style="margin-bottom: 10px;">数据趋势
+                            </van-button>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
-        <van-popup v-model:show="currentShow" closeable close-icon="close" position="bottom" :style="{ height: '30%' }">
+        <van-popup v-model:show="currentShow" closeable close-icon="close" position="bottom"
+            :style="{ height: '30%', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
             <div style="padding: 30px;display: flex;flex-direction: column;align-items: center;">
                 <div>设置电流阈值</div>
                 <div style="padding: 15px;">
-                    <van-stepper v-model="currentValue" @change="changeCurrentValue" />
+                    <van-field label="电流报警阈值" name="currentValue">
+                        <template #input>
+                            <van-stepper v-model="currentValue" @change="changeCurrentValue" />
+                        </template>
+                    </van-field>
+                    <van-field name="picker" label="开启电流报警">
+                        <template #input>
+                            <van-switch size="24px" :model-value="checked" @update:model-value="onUpdateValue" />
+                        </template>
+                    </van-field>
+
+
                 </div>
                 <div>
-                    <van-button color="#7232dd" type="primary" size="small">确定</van-button>
+                    <van-button @click="changeCurrentValueAction" color="#7232dd" type="primary" size="small">确定
+                    </van-button>
                 </div>
             </div>
         </van-popup>
-        <van-popup v-model:show="renameShow" closeable close-icon="close" position="bottom" :style="{ height: '30%' }">
+        <van-popup v-model:show="renameShow" closeable close-icon="close" position="bottom"
+            :style="{ height: '30%', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
             <div style="padding: 30px;display: flex;flex-direction: column;align-items: center;">
                 <div>更改设备名称</div>
                 <div style="padding: 15px;">
@@ -91,7 +112,7 @@ import { deleteDeviceApi, deviceDetailApi } from '../../service/device';
 import { Dialog } from 'vant';
 import { useRouter } from 'vue-router';
 import { Toast } from 'vant';
-
+// 变量定义区
 const subDeviceList = reactive({ data: [] });
 const deviceDetail = reactive({ data: null });
 const currentValue = ref(100);
@@ -99,35 +120,53 @@ const router = useRouter();
 const currentShow = ref(false);
 const renameShow = ref(false);
 const renameValue = ref('')
-
 const zoom = ref(15);
 const center = reactive([121.5273285, 31.21515044])
-
 const polygon = reactive({
     draggable: false,
     visible: true,
     edit: false,
     path: [[121.5273285, 31.21515044], [121.5293285, 31.21515044], [121.5293285, 31.21915044], [121.5273285, 31.21515044]],
-})
+});
 
+const checked = ref(true);
+const onUpdateValue = (newValue) => {
+    Dialog.confirm({
+        title: '提醒',
+        message: '是否切换开关？',
+    }).then(() => {
+        checked.value = newValue;
+    });
+};
+// 点击地图事件
 function clickMap(e) {
     console.log('click map: ', e);
 }
+// 初始化地图
 function initMap(map) {
     console.log('init map: ', map);
 }
-
+// 点击事件
 function click(e) {
     alert('click GeoJSON');
 }
-
+// 唤起设置从设备阈值弹窗
 const setLimitValue = (value) => {
     currentShow.value = true;
-    currentValue.value = value;
+    currentValue.value = value.curLimit;
+    console.log(value)
+    if(value.curEn === 1) {
+        checked.value = true;
+    } else {
+        checked.value = false;
+    }
 };
+// 更改阈值
+const changeCurrentValue = (value) => { };
+// 设置阈值
+const changeCurrentValueAction = () => {
 
-const changeCurrentValue = (value) => { }
-
+};
 const renameDevice = (value) => {
     renameShow.value = true;
     renameValue.value = value;
@@ -181,7 +220,7 @@ const getDeviceDetail = (id) => {
 }
 
 onMounted(() => {
-    console.log("设备详情");
+
     const url = window.location.href;
     console.log(url.split("=")[1])
     getDeviceDetail(url.split("=")[1])

@@ -33,7 +33,11 @@ const routes = [
     },
     {
         path: '/device/add',
-        component: ()=> import('@/views/device/device-form.vue'),
+        component: ()=> import('@/views/device/device-add.vue'),
+    },
+    {
+        path: '/device/update',
+        component: ()=> import('@/views/device/device-update.vue'),
     },
     {
         path: '/fence/detail',
@@ -41,7 +45,11 @@ const routes = [
     },
     {
         path: '/fence/add',
-        component: ()=> import('@/views/fence/fence-form.vue'),
+        component: ()=> import('@/views/fence/fence-add.vue'),
+    },
+    {
+        path: '/fence/update',
+        component: ()=> import('@/views/fence/fence-update.vue'),
     },
     {
         path: '/login',
